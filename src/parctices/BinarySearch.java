@@ -104,25 +104,27 @@ public class BinarySearch {
 				left = mid;
 			}
 		}
-		int[] result = new int[k];
-		for(int i = 0; i< k; i++){
-			if(left == right) {
-				result[i] = array[left];
-				if(left > 0) {
+		while(right - left < k -1) {
+			// the target exists in the array, left will equal to right
+			if(right == left) {
+				if(right >= array.length || (left > 0 && (target - array[left - 1] < array[right +1] - target))) {
 					left--;
-				}
-				if(right < array.length - 1) {
+				}else {
 					right++;
 				}
 			}else {
-				if(Math.abs(array[left]- target) < Math.abs(array[right] - target)) {
-					result[i] = array[left];
-					
+				if(right >= array.length || (left > 0 && target - array[left] <= array[right] - target)) {
+					left--;
+				}else {
+					right++;
 				}
 			}
-			
-			
 		}
+		int[] result = new int[k];
+		for(int i = 0; i < k; i++) {
+			result[i] = array[left + i];
+		}
+		return result;
 	}
 	
 	
