@@ -90,12 +90,13 @@ public class BinarySearch {
 		if(k == 0) {
 			return new int[0];
 		}
-		
+		// Definite the smallest range between left and right
 		int left = findLargestSmallEqual(array,target);
 		int right = left + 1;
 		int[] result = new int[k];
-		
+		// Enlarge the range between left and right until fill out the result array
 		for(int i = 0; i <k; i++) {
+			// if right out of bound or left element is closer to target
 			if(right >= array.length || (left >= 0 && target - array[left] <= array[right] - target)) {
 				result[i] = array[left];
 				left--;
@@ -111,6 +112,7 @@ public class BinarySearch {
 		int left = 0;
 		int right = array.length - 1;
 		//narrow down the gap between left and right
+		// use the binary search but do not let left and right overlapped
 		while(right - left > 1) {
 			int mid = left + (right - left) / 2;
 			if(array[mid] <= target) {
@@ -119,12 +121,16 @@ public class BinarySearch {
 				right = mid;
 			}
 		}
+		// the target is larger than all elements, or equal to the smallest element in the array.
+		// may left = array.length - 2; right = array.length - 1
 		if(array[right] <= target) {
 			return right;
 		}
+		// find the left and right normally
 		if(array[left] <= target) {
 			return left;
 		}
+		//the target is smaller than all elements, or equal to the smallest element in the array.
 		return -1;
 	}
 	
