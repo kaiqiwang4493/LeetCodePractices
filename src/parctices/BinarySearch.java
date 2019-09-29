@@ -88,46 +88,45 @@ public class BinarySearch {
 			return array;
 		}
 		if(k == 0) {
-			return new int[] {0};
+			return new int[0];
 		}
-		// binary search to find the two closest elements.
-		int left = 0;
-		int right = array.length;
-		while(right - left > 1) {
-			int mid = left +(right - left) / 2;
-			if(target < array[mid]) {
-				right = mid;
-			}else if(target > array[mid]){
-				left = mid;
-			}else {
-				right = mid;
-				left = mid;
-			}
-		}
-		while(right - left < k -1) {
-			// the target exists in the array, left will equal to right
-			if(right == left) {
-				if(right >= array.length || (left > 0 && (target - array[left - 1] < array[right +1] - target))) {
-					left--;
-				}else {
-					right++;
-				}
-			}else {
-				if(right >= array.length || (left > 0 && target - array[left] <= array[right] - target)) {
-					left--;
-				}else {
-					right++;
-				}
-			}
-		}
+		
+		int left = findLargestSmallEqual(array,target);
+		int right = left + 1;
 		int[] result = new int[k];
-		for(int i = 0; i < k; i++) {
-			result[i] = array[left + i];
+		
+		for(int i = 0; i <k; i++) {
+			if(right >= array.length || (left >= 0 && target - array[left] <= array[right] - target)) {
+				result[i] = array[left];
+				left--;
+			}else {
+				result[i] = array[right];
+				right++;
+			}
 		}
 		return result;
 	}
 	
-	
+	private int findLargestSmallEqual(int[] array, int target) {
+		int left = 0;
+		int right = array.length - 1;
+		//narrow down the gap between left and right
+		while(right - left > 1) {
+			int mid = left + (right - left) / 2;
+			if(array[mid] <= target) {
+				left = mid;
+			}else {
+				right = mid;
+			}
+		}
+		if(array[right] <= target) {
+			return right;
+		}
+		if(array[left] <= target) {
+			return left;
+		}
+		return -1;
+	}
 	
 	
 	
