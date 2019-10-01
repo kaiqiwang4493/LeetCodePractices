@@ -85,19 +85,22 @@ public class HashTable {
 	
 	public List<List<Integer>> allPairs2(int[] array, int target){
 		List<List<Integer>> result = new ArrayList<>();
-		Set<Integer> set = new HashSet<>();
-		int i = 0;
-		while(i < array.length) {
-			if(set.contains(target - array[i])) {
-				result.add(Arrays.asList(array[i], target - array[i]));
-				set.add(array[i]);
-				i++;
-				while(i < array.length && array[i] == array[i + 1] ) {
-					i++;
-				}
-			}else {
-				set.add(array[i]);
-				i++;
+		// use the map to save the values has been checked
+		// key : the number
+		// value: 0 means the element hasn't been added into result
+		//        1 means the element had been added into result
+		Map<Integer, Integer> map = new HashMap<>();
+		for(int temp : array) {
+			int minus = target - temp;
+			if(map.containsKey(minus) && map.get(minus) == 0) {
+					result.add(Arrays.asList(minus, temp));
+			// The two element have been added into result, so the values of two element are both 1,
+					map.put(minus, 1);
+					map.put(temp, 1);
+			}
+			// Add the new element into HashMap
+			if(!map.containsKey(temp)) {
+				map.put(temp, 0);
 			}
 		}
 		return result;
@@ -117,6 +120,7 @@ public class HashTable {
 	 * Assumption
 	 * The given array is not null and has length of at least 3
 	 * No duplicate triples should be returned, order of the values in the tuple does not matter
+	 * Time = n^2
 	 */
 	// I change the 3 sum question to find 2 sum pairs in the array except array[i].
 	// And the new target is target - array[i]
@@ -158,40 +162,5 @@ public class HashTable {
 		return finalResult;
 	}
 	
-	/*
-	 * 3 Sum solution 2
-	 */
-	public List<List<Integer>> allTriples2(int[] array, int target){
-		List<List<Integer>> result = new ArrayList<>();
-		// because use the array[i] and array[i - 1] to check whether the two elements are duplicated.
-		// so the array must be sorted
-		Arrays.sort(array);
-		for(int i = 0; i < array.length; i++) {
-			// to prevent the duplicated element
-			if(i > 0 && array[i] == array[i - 1]) {
-				continue;
-			}else {
-				int left = i + 1;
-				int right = array.length - 1;
-				while(left < right) {
-					int temp = array[left] + array[right];
-					if(temp + array[i] == target) {
-						result.add(Arrays.asList(array[i], array[left], array[right]));
-						left++;
-						// meet the duplicated element
-						while(left < right && array[left] == array[left - 1]) {
-							left++;
-						}
-					}else if(temp + array[i] < target) {
-						// The array is sorted, so we can use the comparison of target and the sum 
-						//to move the left or right index
-						left++;
-					}else {
-						right--;
-					}
-				}
-			}
-		}
-		return result;
-	}
+	
 }
