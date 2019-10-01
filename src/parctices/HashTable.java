@@ -33,7 +33,7 @@ public class HashTable {
 	}
 	
 	/*
-	 * 2 Sum All Pair I
+	 * 2 Sum All Pair I (return index)
 	 * Find all pairs of elements in a given array that sum to the given target number. 
 	 * Return all the pairs of indices.
 	 * 
@@ -72,6 +72,42 @@ public class HashTable {
 		}
 		return finalResult;
 	}
+	
+	/*
+	 * 2 Sum All Pair 2(return values)
+	 * Find all pairs of elements in a given array that sum to the pair the given target number.
+	 * Return all the distinct pairs of values.
+	 * 
+	 * Assumptions:
+	 * The given array is not null and has length of at least 2
+	 * The order of the values in the pair does not matter
+	 */
+	
+	public List<List<Integer>> allPairs2(int[] array, int target){
+		List<List<Integer>> result = new ArrayList<>();
+		Set<Integer> set = new HashSet<>();
+		int i = 0;
+		while(i < array.length) {
+			if(set.contains(target - array[i])) {
+				result.add(Arrays.asList(array[i], target - array[i]));
+				set.add(array[i]);
+				i++;
+				while(i < array.length && array[i] == array[i + 1] ) {
+					i++;
+				}
+			}else {
+				set.add(array[i]);
+				i++;
+			}
+		}
+		return result;
+	}
+	
+	
+	
+	
+	
+	
 	
 	/*
 	 * 3 Sum
@@ -120,5 +156,42 @@ public class HashTable {
 			}
 		}
 		return finalResult;
+	}
+	
+	/*
+	 * 3 Sum solution 2
+	 */
+	public List<List<Integer>> allTriples2(int[] array, int target){
+		List<List<Integer>> result = new ArrayList<>();
+		// because use the array[i] and array[i - 1] to check whether the two elements are duplicated.
+		// so the array must be sorted
+		Arrays.sort(array);
+		for(int i = 0; i < array.length; i++) {
+			// to prevent the duplicated element
+			if(i > 0 && array[i] == array[i - 1]) {
+				continue;
+			}else {
+				int left = i + 1;
+				int right = array.length - 1;
+				while(left < right) {
+					int temp = array[left] + array[right];
+					if(temp + array[i] == target) {
+						result.add(Arrays.asList(array[i], array[left], array[right]));
+						left++;
+						// meet the duplicated element
+						while(left < right && array[left] == array[left - 1]) {
+							left++;
+						}
+					}else if(temp + array[i] < target) {
+						// The array is sorted, so we can use the comparison of target and the sum 
+						//to move the left or right index
+						left++;
+					}else {
+						right--;
+					}
+				}
+			}
+		}
+		return result;
 	}
 }
