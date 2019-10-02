@@ -244,11 +244,18 @@ public class RecursionalAndSorting {
 		}
 		
 		//build the output array
-		for(int i = count.length - 1; i > 0; i--) {
-			while(count[i] != count[i - 1]) {
-				array[count[i] - 1] = i;
-				--count[i];
-			}
+		int [] output = new int[array.length + 1];
+		for(int i = array.length - 1; i >= 0; i--) {
+			output[count[array[i]]] = array[i];
+			--count[array[i]];
+		}
+		
+		//transfer the sorted from output to array
+		// because the count[array[i]] contains the number of the values
+		// so there is no zero in count
+		// the first value in output is start from output[1]
+		for(int i = 1; i < output.length; i++) {
+			array[i - 1] = output[i];
 		}
 		return array;
 	}
