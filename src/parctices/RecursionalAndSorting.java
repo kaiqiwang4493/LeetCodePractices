@@ -7,7 +7,10 @@ public class RecursionalAndSorting {
 	 * The selection sort algorithm should be used to solve this problem.
 	 * 
 	 */
+	public 	RecursionalAndSorting(){
 		
+	}
+	
 	public int[] solve(int[] array) {
 		if(array == null || array.length == 1) {
 			return array;
@@ -213,4 +216,40 @@ public class RecursionalAndSorting {
 		return array;
 	}
 	
+	/*
+	 * Counting Sort
+	 * 
+	 * Assumption
+	 * the input is nonnegative Integer. 
+	 */
+	
+	public int[] countingSort(int[] array) {
+		if(array == null || array.length <= 1) {
+			return array;
+		}
+		int[] count = new int[10];
+		for(int i = 0; i< 10; i++) {
+			count[i] = 0;
+		}
+		
+		// store count of each character 
+		for(int i = 0 ; i < array.length; i++) {
+			count[array[i]]++;
+		}
+		
+		//change count[i] 
+		// the count[i] contains actual position of this character in output array
+		for(int i = 1; i < 10; i++) {
+			count[i] += count[i - 1];
+		}
+		
+		//build the output array
+		for(int i = count.length - 1; i > 0; i--) {
+			while(count[i] != count[i - 1]) {
+				array[count[i] - 1] = i;
+				--count[i];
+			}
+		}
+		return array;
+	}
 }
