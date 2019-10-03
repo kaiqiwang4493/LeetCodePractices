@@ -43,6 +43,7 @@ public class BinarySearch {
 		// do not find the target in matrix.
 		return new int[] {-1, -1};
 	}
+	
 	// an other way to solve the problem, change the matrix to 1D array.
 	public int[] searchInSortedMatrix2(int[][] matrix, int target) {
 		//base case

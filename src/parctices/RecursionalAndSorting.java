@@ -244,6 +244,8 @@ public class RecursionalAndSorting {
 		}
 		
 		//build the output array
+		// move the elements from array to output 
+		// we want to keep the order of elements
 		int [] output = new int[array.length + 1];
 		for(int i = array.length - 1; i >= 0; i--) {
 			output[count[array[i]]] = array[i];
@@ -254,9 +256,17 @@ public class RecursionalAndSorting {
 		// because the count[array[i]] contains the number of the values
 		// so there is no zero in count
 		// the first value in output is start from output[1]
-		for(int i = 1; i < output.length; i++) {
-			array[i - 1] = output[i];
+		if(count[0] == 0) {
+			for(int i = 1; i < output.length; i++) {
+				array[i - 1] = output[i];
+			}
+		}else {
+			// if there is zero value in array and count
+			for(int i = 0; i < output.length; i++) {
+				array[i] = output[i];
+			}
 		}
+		
 		return array;
 	}
 }
