@@ -152,7 +152,9 @@ public class LinkedListPractices {
 	 * equal to target value T. The original relative order of the nodes in each of
 	 * the two partitions should be preserved.
 	 */
-
+	
+	// we compare the node value with target, and put the node to the end of list if necessary.
+	// How many node in the list, how many times compare we need.
 	public ListNode partition(ListNode head, int target) {
 		if (head == null || head.next == null) {
 			return head;
@@ -160,18 +162,24 @@ public class LinkedListPractices {
 		int length = 0;
 		ListNode temp = head;
 		ListNode tail = temp;
+		// get the length of list to get how many times compare are needed
 		while (temp != null) {
 			length++;
 			tail = temp;
 			temp = temp.next;
 		}
+		// reset the temp node.
 		temp = head;
 		ListNode pre = null;
 		for (int i = 0; i < length; i++) {
+			// node value < target, do not need change position
 			if (temp.value < target) {
 				pre = temp;
 				temp = temp.next;
 			} else {
+				// node value >= target need to change position
+				// if the node is hand node, we just put it at the end of list
+				// We do not have to use previous node.
 				if (temp == head) {
 					head = head.next;
 					tail.next = temp;
@@ -179,6 +187,8 @@ public class LinkedListPractices {
 					tail = tail.next;
 					temp = head;
 				} else {
+					// If the node not the hand node, we put it at the end of list
+					// and connect the previous node and the next node
 					pre.next = temp.next;
 					tail.next = temp;
 					temp.next = null;
@@ -189,4 +199,73 @@ public class LinkedListPractices {
 		}
 		return head;
 	}
+	
+	//Partition solution 2
+	// new two Linked list to contains the nodes larger than target and the nodes less than target
+	
+	public ListNode partition2(ListNode head, int target) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		
+		ListNode smallDummy = new ListNode(-1);
+		ListNode largeDummy = new ListNode(-1);
+		ListNode small = smallDummy;
+		ListNode large = largeDummy;
+		ListNode cur = head;
+		// separate the original list to two sublist due to the value.
+		while(cur != null) {
+			if(cur.value < target) {
+				small.next = cur;
+				small = small.next;
+			}else {
+				large.next = cur;
+				large = large.next;
+			}
+			cur = cur.next;
+		}
+		// connect two Linked List.
+		small.next = largeDummy.next;
+		large.next = null;
+		
+		return smallDummy.next;
+	}
+	
+	/*
+	 * Merge Sort Linked List
+	 * Given a singly-linked list, where each node contains an integer value, sort it in ascending order. 
+	 * The merge sort algorithm should be used to solve this problem.
+	 */
+	
+	public ListNode mergeSort(ListNode head) {
+		if(head == null || head.next == null) {
+			return head;
+		}
+		ListNode mid= findMidNode(head);
+		ListNode head2 = mid.next;
+		mid.next = null;
+		ListNode headLeft = mergeSort(head);
+		ListNode headRight = mergeSort(head2);
+		
+		ListNode dummy = new ListNode(-1);
+		ListNode cur = dummy;
+		while(headLeft != null && headRight != null) {
+			if(headLeft.value <= headRight.value) {
+				cur.next = headLeft;
+				headLeft = headLeft.next;
+			}else {
+				cur.next = headRight;
+				headRight = headRight.next;
+			}
+			cur = cur.next;
+		}
+		if(headLeft != null) {
+			cur.next = headLeft;
+		}
+		if(headRight != null) {
+			cur.next = headRight;
+		}
+		return dummy.next;
+	}
+	
 }
