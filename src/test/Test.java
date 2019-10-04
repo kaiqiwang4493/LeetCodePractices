@@ -1,20 +1,32 @@
 package test;
 
-import parctices.RecursionalAndSorting;
+
+import dataStructure.ListNode;
+import parctices.LinkedListPractices;
 
 public class Test {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int[] array = new int[] {5,4,0,2,0};
-		for(int i = 0; i < array.length; i++) {
-			System.out.print(array[i]);
+		ListNode dummy = new ListNode(-1);
+		ListNode cur = dummy;
+		for(int i = 1 ; i <7; i++) {
+			cur.next = new ListNode(i);
+			cur = cur.next;
 		}
-		RecursionalAndSorting sort = new RecursionalAndSorting();
-		int[] result = sort.countingSort(array);
+		ListNode head = dummy.next;
+		ListNode temp = head;
+		while(temp != null) {
+			System.out.print(temp.value);
+			temp = temp.next;
+		}
 		System.out.println();
-		for(int i = 0; i < result.length; i++) {
-			System.out.print(result[i]);
+		LinkedListPractices test = new LinkedListPractices();
+		ListNode result = test.reorder(head);
+		temp = result;
+		while(temp != null) {
+			System.out.print(temp.value);
+			temp = temp.next;
 		}
 	}
 
