@@ -1,6 +1,7 @@
 package parctices;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -92,7 +93,50 @@ public class BFS {
 	 * For each row the elements are sorted in ascending order, 
 	 * and for each column the elements are also sorted in ascending order. 
 	 * Find the Kth smallest number in it.
+	 * 
+	 * it likes "K Smallest In Unsorted Array". However, we do not have to new a PriorityQueue with N * M size. 
+	 * We new a MAXIMUM PriorityQueue with K size. and we put first K elements into the PriorityQueue.
+	 * Then we compare the each elements in the matrix with the PriortiyQueue.peek().
+	 * If ( element < peek()), we replace the biggest value in the PriorityQueue with the element.
 	 */
+	public int KthSmallest(int[][] matrix, int k) {
+		 if(k == 0) {
+			 return 0;
+		 }
+		 int m = matrix.length;
+		 int n = matrix[0].length;
+		 //new a MAXIMUM PriorityQueue with K size.
+		 PriorityQueue<Integer> pq = new PriorityQueue<>(k, Collections.reverseOrder());
+		 // put the first  K value into the pq
+		 for(int i = 0; i<k; i++) {
+			 // change the K to the 2D index
+			 int temp = matrix[i / n][i % n];
+			 pq.add(temp);
+		 }
+		 
+		for (int i = (k - 1) / n; i < m; i++) {
+			// the row that has the part of elements has been add into pq. It unnecessary to compare the elements
+			if (i == (k - 1) / n) {
+				for(int j = ((k - 1) % n) + 1; j < m; j++) {
+					Integer value = matrix[i][j];
+					if(value < pq.peek()) {
+						pq.poll();
+						pq.add(value);
+					}
+				}
+			}else {
+				//the rest part of matrix. We need to compare from the start node in each row
+				for(int j = 0; j < m; j++) {
+					Integer value = matrix[i][j];
+					if(value < pq.peek()) {
+						pq.poll();
+						pq.add(value);
+					}
+				}
+			}
+		}
+		return pq.peek();
+	}
 	
 	
 }
