@@ -99,11 +99,15 @@ public class BinaryTree {
 	 * 
 	 * Implement an iterative, post-order traversal of a given binary tree, 
 	 * return the list of keys of each node in the tree as it is post-order traversed.
+	 *
+	 * the key point of this algorithm is we must to know the direction of cur node
+	 * whether it move from top to bottom or from bottom to top. when it move from
+	 * top to bottom, offer it into stack. But, when it move from bottom to top, we
+	 * have to distinguish come from left or right. Because when the cur is coming
+	 * from left, we need to check the cur.right. We can add the cur.key to list
+	 * when right is null when the cur is coming from right, the left and right nods
+	 * have been traversed, we just add the cur.key to list directly.
 	 */
-	// the key point of this algorithm is we must to know the direction of cur node
-	// whether it move from top to bottom or from bottom to top.
-	// when it move from top to bottom, offer it stack
-	// But, when it move from bottom to top, we have to consider how to add result and whether offer other node.
 	
 	public List<Integer> postOrder(TreeNode root){
 		List<Integer> list = new ArrayList<>();
@@ -116,6 +120,7 @@ public class BinaryTree {
 		stack.offerFirst(root);
 		while(!stack.isEmpty()) {
 			cur = stack.peekFirst();
+			// the cur is from top to bottom
 			if(pre == null || cur == pre.left || cur == pre.right) {
 				if(cur.left != null) {
 					stack.offerFirst(cur.left);
@@ -132,6 +137,7 @@ public class BinaryTree {
 				if(cur.right != null) {
 					stack.offerFirst(cur.right);
 				}else {
+					//if the right node is null
 					list.add(cur.key);
 					stack.pollFirst();
 				}
