@@ -151,6 +151,51 @@ public class BinaryTree {
 		return list;
 	}
 	
+	/*
+	 * Delete In Binary Search Tree
+	 * 
+	 * Delete the target key K in the given binary search tree if the binary search tree contains K. 
+	 * Return the root of the binary search tree.
+	 */
 	
-	
+	public TreeNode deleteTree(TreeNode root, int key) {
+		if(root == null) {
+			return root;
+		}
+		if(key < root.key) {
+			return deleteTree(root.left, key);
+		}
+		if (key > root.key) {
+			return deleteTree(root.right, key);
+		}
+
+		// find the TreeNode should be deleted.
+		if (root.left == null) {
+			return root.right;
+		}
+		if (root.right == null) {
+			return root.left;
+		}
+		if (root.right.left == null) {
+			root.right.left = root.left;
+			return root.right;
+		}
+
+		TreeNode smallest = deleteSmallest(root.right);
+		smallest.left = root.left;
+		smallest.right = root.right;
+		return smallest;
+
+	}
+			
+	private TreeNode deleteSmallest(TreeNode root) {
+		TreeNode prev = root;
+		while(root.left != null) {
+			prev = root;
+			root = root.left;
+		}
+		//find the smallest node
+		prev.left = root.right;
+		return root;
+	}
 }
