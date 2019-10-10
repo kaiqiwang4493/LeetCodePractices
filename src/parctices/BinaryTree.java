@@ -163,10 +163,12 @@ public class BinaryTree {
 			return root;
 		}
 		if(key < root.key) {
-			return deleteTree(root.left, key);
+			root.left = deleteTree(root.left, key);
+			return root;
 		}
 		if (key > root.key) {
-			return deleteTree(root.right, key);
+			root.right = deleteTree(root.right, key);
+			return root;
 		}
 
 		// find the TreeNode should be deleted.
@@ -198,4 +200,68 @@ public class BinaryTree {
 		prev.left = root.right;
 		return root;
 	}
+	
+	/*Is Binary Search Tree Or Not
+	 * 
+	 * Determine if a given binary tree is binary search tree.
+	 * There should no be duplicate keys in binary search tree.
+	 * 
+	 * but this way time is T(h^h), is unacceptable.
+	 */
+	
+	public boolean isBST(TreeNode root) {
+		if(root == null) {
+			return true;
+		}
+			boolean leftisBST = isBST(root.left);
+			boolean rightisBST = isBST(root.right);
+
+		if(!rightisBST || !leftisBST) {
+			return false;
+		}
+		
+		if(root.left != null) {
+			TreeNode leftSide = root.left;
+			while(leftSide != null) {
+				if(leftSide.key >= root.key) {
+					return false;
+				}
+				leftSide = leftSide.right;
+			}
+		}
+		
+		if(root.right != null) {
+			TreeNode rightSide = root.right;
+			while(rightSide != null) {
+				if(rightSide.key <= root.key) {
+					return false;
+				}
+				rightSide = rightSide.left;
+			}
+		}
+		return true;
+	}
+
+	
+	public static int lastSeen;
+	public boolean isBST2(TreeNode root) {
+		lastSeen = Integer.MIN_VALUE;
+		return isBSTHelper(root);
+	}
+	
+	private boolean isBSTHelper(TreeNode root) {
+		if(root == null) {
+			return true;
+		}
+		
+		if(!isBSTHelper(root.left)) {
+			return false;
+		}
+		if(lastSeen >= root.key) {
+			return false;
+		}
+		lastSeen = root.key;
+		return isBSTHelper(root.right);
+	}
+	
 }
