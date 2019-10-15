@@ -42,6 +42,7 @@ public class DFS {
 	/*
 	 * All Valid Permutations Of Parentheses I
 	 * Given N pairs of parentheses “()”, return a list with all the valid permutations.
+	 *  this is similar with the All Subsets quesiton.
 	 */
 	public List<String> validParentheses(int n){
 		List<String> result = new ArrayList<>();
@@ -71,5 +72,42 @@ public class DFS {
 		}
 	}
 	
+	/*
+	 * Combinations Of Coins
+	 * Given a number of different denominations of coins (e.g., 1 cent, 5 cents, 10 cents, 25 cents),
+	 * get all the possible ways to pay a target number of cents.
+	 */
 	
+	public List<List<Integer>> combinations(int target, int[] coins){
+		List<List<Integer>> finalResult = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		if(target == 0 || coins.length == 0){
+			return finalResult;
+		}
+		// use sum to record the sum of coins add in temporary result.
+		int index = 0;
+		combinationsHelper(finalResult, temp ,index, target, coins);
+		return finalResult;
+	}
+	
+	private void combinationsHelper(List<List<Integer>> finalResult, List<Integer> temp, int index, int target, int[] coins) {
+		if(index == coins.length - 1) {
+			// if target % coins[index] == 0, we find one answer
+			// else, this combination is not existing.
+			if(target % coins[index] == 0) {
+				temp.add(target /coins[index]);
+				finalResult.add(new ArrayList<Integer>(temp));
+				temp.remove(temp.size() - 1);
+			}
+			return;
+		}
+		// to find out the possible number for coins except smallest one.
+		//this method will check the combination consist on smallest coins firstly.
+		// then increase the number of larger denomination coins.
+		for(int i = 0; (i* coins[index]	<= target); i++) {
+			temp.add(i);
+			combinationsHelper(finalResult, temp, index + 1, target, coins);
+			temp .remove(temp.size() - 1);
+		}
+	}
 }
