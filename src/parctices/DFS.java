@@ -1,6 +1,7 @@
 package parctices;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DFS {
@@ -167,6 +168,81 @@ public class DFS {
 		char temp = array[left];
 		array[left] = array[right];
 		array[right] = temp;
+	}
+	
+	/*
+	 * All Subsets II
+	 * 
+	 * Given a set of characters represented by a String, return a list containing all subsets of the characters. 
+	 * Notice that each subset returned will be sorted to remove the sequence.
+	 */
+	
+	public List<String> subSets2(String set){
+		List<String> result = new ArrayList<>();
+		if(set == null) {
+			return result;
+		}
+		if(set.length() == 0) {
+			result.add("");
+			return result;
+		}
+		
+		char[] array = set.toCharArray();
+		Arrays.sort(array);
+		int index = 0;
+		StringBuilder temp = new StringBuilder();
+		subSet2Helper(array, result,temp, index);
+		return result;
+	}
+	
+	private void subSet2Helper(char[] array, List<String> result,StringBuilder temp, int index) {
+		if(index == array.length) {
+			result.add(temp.toString());
+			return;
+		}
+		
+		temp.append(array[index]);
+		subSet2Helper(array, result, temp, index + 1);
+		temp.deleteCharAt(temp.length() - 1);
+		// skip the duplicated element in the array.
+		//CAUTION: index < array.length - 1 not < array.length. Because we need dereference array[index + 1]
+		while(index < array.length - 1 && array[index + 1] == array[index]) {
+			index++;
+		}
+		subSet2Helper(array, result, temp, index + 1);
+	}
+	
+	/*
+	 * All Subsets of Size K
+	 * Given a set of characters represented by a String, 
+	 * return a list containing all subsets of the characters whose size is K.
+	 * 
+	 * we find all subsets like All Subsets I. And we just need check the subset length before adding into result.
+	 */
+	
+	public List<String> subSetsOfSizeK(String set ,int k){
+		List<String> result = new ArrayList<>();
+		char[] array = set.toCharArray();
+		int index = 0;
+		StringBuilder temp = new StringBuilder();
+		
+		subSetsOfSizeKHelper(array, temp, result,index, k);
+		return result;
+	}
+	
+	private void subSetsOfSizeKHelper(char[] array, StringBuilder temp, List<String> result, int index, int k) {
+		if(index == array.length) {
+			// we need check the length of subsets,only the length == k is ok.
+			if(temp.length() == k) {
+				result.add(temp.toString());
+			}
+			return;
+		}
+		
+		temp.append(array[index]);
+		subSetsOfSizeKHelper(array, temp, result, index + 1, k);
+		temp.deleteCharAt(temp.length() - 1);
+		subSetsOfSizeKHelper(array, temp, result, index + 1, k);	
 	}
 	
 }
