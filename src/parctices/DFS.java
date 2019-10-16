@@ -111,6 +111,7 @@ public class DFS {
 				temp.add(target /coins[index]);
 				finalResult.add(new ArrayList<Integer>(temp));
 				temp.remove(temp.size() - 1);
+				// must to add remove() at the each level has add()
 			}
 			return;
 		}
@@ -120,7 +121,7 @@ public class DFS {
 		// then increase the number of larger denomination coins.
 		for(int i = 0; (i* coins[index]	<= target); i++) {
 			temp.add(i);
-			combinationsHelper(finalResult, temp, index + 1, target, coins);
+			combinationsHelper(finalResult, temp, index + 1, target - (i * coins[index]), coins);
 			temp .remove(temp.size() - 1);
 		}
 	}
@@ -212,6 +213,7 @@ public class DFS {
 		subSet2Helper(array, result, temp, index + 1);
 	}
 	
+	
 	/*
 	 * All Subsets of Size K
 	 * Given a set of characters represented by a String, 
@@ -244,5 +246,149 @@ public class DFS {
 		temp.deleteCharAt(temp.length() - 1);
 		subSetsOfSizeKHelper(array, temp, result, index + 1, k);	
 	}
+	
+	/*
+	 * Factor Combinations(coins)
+	 * Given an integer number, return all possible combinations of the factors that can multiply to the target number.
+	 * 
+	 * find the factors first( find the all denominations of coins)
+	 * combine the different factors.
+	 * 
+	 * This coding has some problem. 
+	 */
+	
+//	public List<List<Integer>> factorCombinations(int target){
+//		List<List<Integer>> result = new ArrayList<>();
+//		List<Integer> quotient = new ArrayList<>();
+//		//find the factors
+//		List<Integer> factorList = new ArrayList<>();
+//		for(int i  = 2; i < target ; i++) {
+//			if(target % i == 0) {
+//				factorList.add(i);
+//			}
+//		}
+//		
+//		int index = 0;
+//		factorCombinationsHelper(result, quotient, factorList, index, target);
+//		return result;	
+//	}
+//	
+//	private void factorCombinationsHelper(List<List<Integer>> result, List<Integer> quotient, List<Integer> factorList, int index, int target) {
+//		if(index == factorList.size() - 1) {
+//			if(target == 1) {
+//				quotient.add(0);
+//				makeTheResult(result, quotient, factorList);
+//				quotient.remove(quotient.size()- 1);
+//			}else if(target % factorList.get(index) == 0) {
+//				quotient.add(target / factorList.get(index));
+//				makeTheResult(result, quotient, factorList);
+//				quotient.remove(quotient.size()- 1);
+//			}
+//			return;
+//		}
+//		
+//		for(int i = 0; i * factorList.get(index) < target; i++) {
+//			quotient.add(i);
+//			if(i == 0) {
+//				factorCombinationsHelper(result, quotient, factorList, index + 1, target);
+//			}else {
+//				factorCombinationsHelper(result, quotient, factorList, index + 1, target/(factorList.get(index) * i));
+//			}
+//			quotient.remove(quotient.size() - 1);
+//		}
+//	}
+//	
+//	private void makeTheResult(List<List<Integer>> result, List<Integer> quotient, List<Integer> factorList) {
+//		// records the temporary result.
+//		List<Integer> preResult = new ArrayList<>();
+//		for(int i = 0; i < quotient.size(); i++) {
+//			if(quotient.get(i) >1) {
+//				preResult.add(quotient.get(i));
+//				preResult.add(factorList.get(i));
+//			}else if(quotient.get(i) == 1){
+//				preResult.add(factorList.get(i));
+//			}else {
+//				continue;
+//			}
+//		}
+//		result.add(preResult);
+//	}
+	
+	
+	/*
+	 * Factor Combinations(coins)
+	 * this method is getting from leetcode
+	 * 
+	 * The index cannot be used in this question. In this recursion tree, the number of branch and layer is dynamic.
+	 * So we cannot use the index to decide the number of layers has. Only comparing the value of product and target.
+	 * 
+	 * Because this problem is about multiply, so we should not update target in to next recursion. 
+	 * Updating the value of product, and comparing the product and factor with target to know should I stop increase factor.
+	 */
+	
+	public List<List<Integer>> getFactors(int target){
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		getFactorsHelper(result, temp, 2, 1, target);
+		return result;
+	}
+	
+	private void getFactorsHelper(List<List<Integer>> result, List<Integer> temp, int start, int product, int target) {
+		if(start > target || product > target) {
+			return;
+		}
+		if(product == target) {
+			ArrayList<Integer> t = new ArrayList<>(temp);
+			result.add(t);
+			return;
+		}
+		for(int i = start; i<target; i++) {
+			// the i is too large, and the product is larger than target. Then we do not need continue increase i.
+			if(i * product > target) {
+				break;
+			}
+			// the i is one of factors of target,then add it in temp,
+			if( target % i == 0) {
+				temp.add(i);
+				// use this factors as a new start, to find the next factor.And we need update the product.
+				getFactorsHelper(result, temp, i, i*product, target);
+				temp.remove(temp.size() - 1);
+			}
+		}
+	}
+	
+	/*
+	 * Factor Combinations(solution2)
+	 * the way to update target
+	 */
+	public List<List<Integer>> getFactors2(int target){
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> temp = new ArrayList<>();
+		getFactorsHelper2(result, temp, 2, target);
+		return result;
+	}
+	
+	private void getFactorsHelper2(List<List<Integer>> result, List<Integer> temp, int start, int target) {
+		if(target == 1) {
+			// avoid the answer just includes the target itself.
+			if(temp.size() == 1) {
+				return;
+			}else {
+			ArrayList<Integer> t = new ArrayList<>(temp);
+			result.add(t);
+			return;}
+			
+		}
+		for(int i = start; i<=target; i++) {
+			// the i is one of factors of target,then add it in temp,
+			if( target % i == 0) {
+				temp.add(i);
+				// use this factors as a new start, to find the next factor.And we need update the target.
+				getFactorsHelper2(result, temp, i, target / i);
+				temp.remove(temp.size() - 1);
+			}
+		}
+	}
+	
 	
 }
