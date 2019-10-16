@@ -16,7 +16,7 @@ public class Test {
 
 	public static void main(String[] args) {
 		DFS dfs = new DFS();
-		List<List<Integer>> result = dfs.getFactors(16);
+		List<List<Integer>> result = dfs.getFactors(12);
 		for(List<Integer> i : result) {
 			System.out.println(i);
 		}
