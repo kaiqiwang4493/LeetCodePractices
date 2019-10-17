@@ -390,5 +390,51 @@ public class DFS {
 		}
 	}
 	
+	/*
+	 * All Subsets II of Size K
+	 * 
+	 * Given a set of characters represented by a String, return a list containing all subsets of the characters whose size is K.
+	 *  Notice that each subset returned will be sorted for deduplication.
+	 *  
+	 *  Set = "abc", K = 2, all the subsets are [“ab”, “ac”, “bc”].
+	 *  Set = "abb", K = 2, all the subsets are [“ab”, “bb”].
+	 *  Set = "abab", K = 2, all the subsets are [“aa”, “ab”, “bb”].
+	 *  Set = "", K = 0, all the subsets are [""].
+	 *  Set = "", K = 1, all the subsets are [].
+	 *	Set = null, K = 0, all the subsets are [].
+	 */
 	
+	public List<String> subSet2OfSizeK(String set, int k){
+		List<String> result = new ArrayList<>();
+		if(set == null || set == null && k == 1) {
+			return result;
+		}
+		if(k == 0){
+				result.add("");
+		      return result;
+		    }
+		int index = 0;
+		char[] array = set.toCharArray();
+		Arrays.sort(array);
+		StringBuilder temp = new StringBuilder();
+		subSet2OfSizeKHelper(array, result, temp,index, k);
+		return result;
+	}
+	
+	private void subSet2OfSizeKHelper(char[] array, List<String> result, StringBuilder temp,int index, int k) {
+		if(index == array.length) {
+			if(temp.length() == k) {
+				result.add(temp.toString());
+				return;
+			}
+		}
+		
+		temp.append(array[index]);
+		subSet2OfSizeKHelper(array, result, temp, index + 1, k);
+		temp.deleteCharAt(temp.length() - 1);
+		while(index < array.length - 1 && array[index] == array[index + 1]) {
+			index++;
+		}
+		subSet2OfSizeKHelper(array, result, temp, index + 1, k);
+	}
 }
